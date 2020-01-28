@@ -1,0 +1,13 @@
+T1	DS 0 9	Vitamin D
+T2	DS 90 99	Vitamin D
+T3	DS 200 209	vitamin D
+T4	DS 280 289	vitamin D
+T5	DS 426 435	vitamin D
+T6	DS 751 760	vitamin D
+T7	DS 1205 1214	vitamin D
+T8	DS 1356 1365	vitamin D
+T9	DS 1472 1481	vitamin D
+T10	DS 1690 1699	vitamin D
+T11	DS 1760 1769	vitamin D
+T12	DS 2128 2137	vitamin D
+T13	DS 2190 2199	vitamin D

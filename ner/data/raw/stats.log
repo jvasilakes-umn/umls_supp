@@ -1,0 +1,12 @@
+python scripts/get_brat_annotations.py --anndirs data/raw/pubmed_annotations/annotator1 data/raw/pubmed_annotations/annotator2
+
+Overall
+{'total_anns': 3909, 'unique_terms': 673}
+
+data/raw/pubmed_annotations/annotator1
+{'total_anns': 1954, 'avg_anns_per_file': 9.349282296650715, 'unique_terms': 399}
+
+data/raw/pubmed_annotations/annotator2
+{'total_anns': 1955, 'avg_anns_per_file': 9.354066985645929, 'unique_terms': 416}
+
+Saved unique terms to data/raw/pubmed_annotations/unique_terms.txt.

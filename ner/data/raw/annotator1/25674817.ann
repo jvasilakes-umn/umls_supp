@@ -1,0 +1,18 @@
+T1	DS 57 63	Folate
+T2	DS 76 82	Folate
+T3	DS 295 305	folic acid
+T4	DS 332 356	unmetabolized folic acid
+T5	DS 358 362	UMFA
+T6	DS 504 514	folic acid
+T7	DS 526 530	UMFA
+T8	DS 674 678	UMFA
+T9	DS 933 939	folate
+T10	DS 982 988	folate
+T11	DS 1026 1030	UMFA
+T12	DS 318 330	multivitamin
+T13	DS 1154 1160	folate
+T14	DS 1272 1282	folic acid
+T15	DS 1447 1453	folate
+T16	DS 625 631	folate
+T17	DS 836 842	folate
+T18	DS 221 227	folate

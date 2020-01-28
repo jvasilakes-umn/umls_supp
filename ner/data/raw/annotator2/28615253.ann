@@ -1,0 +1,14 @@
+T1	DS 8 15	calcium
+T2	DS 105 112	calcium
+T3	DS 153 160	calcium
+T4	DS 299 306	calcium
+T5	DS 367 374	calcium
+T6	DS 465 472	calcium
+T7	DS 909 916	calcium
+T8	DS 1039 1046	calcium
+T9	DS 1090 1096	sodium
+T10	DS 1098 1108	phosphorus
+T11	DS 1204 1211	calcium
+T12	DS 1320 1327	calcium
+T13	DS 1479 1486	calcium
+T14	DS 1883 1890	calcium

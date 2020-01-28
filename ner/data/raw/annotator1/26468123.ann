@@ -1,0 +1,16 @@
+T1	DS 0 8	Selenium
+T2	DS 120 128	selenate
+T3	DS 198 214	Selenomethionine
+T4	DS 255 263	selenium
+T5	DS 296 304	selenide
+T6	DS 639 647	selenium
+T7	DS 736 744	selenium
+T8	DS 672 680	selenium
+T9	DS 839 855	selenomethionine
+T10	DS 1044 1052	selenium
+T11	DS 1056 1064	selenate
+T12	DS 1089 1105	selenomethionine
+T13	DS 1470 1486	selenomethionine
+T14	DS 1688 1696	selenate
+T15	DS 1827 1835	selenium
+T16	DS 1911 1927	selenomethionine

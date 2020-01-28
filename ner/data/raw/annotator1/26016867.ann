@@ -1,0 +1,17 @@
+T1	DS 32 37	krill
+T2	DS 42 48	salmon
+T3	DS 128 133	Krill
+T4	DS 171 192	marine n-3 (ω-3) PUFA
+T6	DS 414 419	krill
+T7	DS 424 430	salmon
+T8	DS 458 479	eicosapentaenoic acid
+T9	DS 481 484	EPA
+T10	DS 490 510	docosahexaenoic acid
+T11	DS 512 515	DHA
+T5	DS 269 278	krill-oil
+T12	DS 432 434	KS
+T13	DS 815 821	KS oil
+T14	DS 1273 1279	KS oil
+T15	DS 1494 1500	KS-oil
+T16	DS 1629 1635	KS oil
+T17	DS 1692 1701	krill-oil

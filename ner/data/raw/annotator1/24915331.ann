@@ -1,0 +1,21 @@
+T1	DS 0 9	Vitamin D
+T2	DS 80 89	vitamin D
+T4	DS 506 515	vitamin D
+T3	DS 683 692	vitamin D
+T5	DS 829 843	ergocalciferol
+T6	DS 845 855	vitamin D2
+T7	DS 965 980	cholecalciferol
+T8	DS 982 992	vitamin D3
+T9	DS 1023 1042	25-hydroxyvitamin D
+T10	DS 1044 1049	25OHD
+T11	DS 1178 1193	cholecalciferol
+T12	DS 1198 1212	ergocalciferol
+T13	DS 1249 1258	vitamin D
+T14	DS 1332 1342	vitamin D3
+T15	DS 1397 1406	vitamin D
+T16	DS 1510 1519	vitamin D
+T17	DS 1583 1592	vitamin D
+T18	DS 1721 1730	vitamin D
+T19	DS 2006 2015	vitamin D
+T20	DS 2069 2078	vitamin D
+T21	DS 208 217	vitamin D

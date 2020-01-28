@@ -1,0 +1,19 @@
+T1	DS 0 25	Vitamin A supplementation
+T2	DS 170 179	Vitamin A
+T3	DS 181 183	VA
+T4	DS 185 192	retinol
+T5	DS 380 382	VA
+T6	DS 440 442	VA
+T7	DS 664 666	VA
+T8	DS 759 761	VA
+T9	DS 861 863	VA
+T10	DS 870 887	retinyl palmitate
+T11	DS 959 966	retinol
+T12	DS 1159 1166	retinol
+T13	DS 1221 1228	retinol
+T14	DS 1273 1275	VA
+T15	DS 1535 1542	retinol
+T16	DS 1737 1744	Retinol
+T17	DS 1846 1848	VA
+T18	DS 48 62	retinyl esters
+T19	DS 785 792	retinol

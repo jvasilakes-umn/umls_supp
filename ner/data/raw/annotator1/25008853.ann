@@ -1,0 +1,14 @@
+T1	DS 0 9	Vitamin E
+T3	DS 280 289	vitamin E
+T5	DS 415 424	vitamin E
+T6	DS 428 437	vitamin C
+T7	DS 670 679	vitamin E
+T8	DS 707 716	vitamin C
+T9	DS 758 767	vitamin E
+T10	DS 772 781	vitamin C
+T11	DS 1204 1213	vitamin E
+T12	DS 1388 1397	vitamin C
+T13	DS 1530 1539	vitamin E
+T14	DS 1544 1553	vitamin C
+T15	DS 1826 1835	vitamin E
+T4	DS 338 347	vitamin C

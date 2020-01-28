@@ -1,0 +1,8 @@
+python scripts/ira_seq.py --indir1 for_ira/annotator1 --indir2 for_ira/annotator2 --annotation_conf annotation.conf > ira.log
+
+Cohen's Kappa
+Mean: 0.861 +/-0.229
+Range: (0.000, 1.000)
+Percentage Agreement
+Mean: 0.990 +/-0.013
+Range: (0.955, 1.000)

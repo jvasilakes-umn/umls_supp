@@ -1,0 +1,11 @@
+T1	DS 0 8	Fish-oil
+T2	DS 314 371	long-chain (LC) n-3 (omega-3) polyunsaturated fatty acids
+T3	DS 373 377	PUFA
+T4	DS 490 498	fish-oil
+T5	DS 986 994	fish-oil
+T6	DS 1245 1253	fish-oil
+T7	DS 1427 1435	fish-oil
+T8	DS 1820 1828	fish-oil
+T9	DS 1890 1898	Fish-oil
+T10	DS 2196 2204	fish-oil
+T11	DS 2416 2420	PUFA

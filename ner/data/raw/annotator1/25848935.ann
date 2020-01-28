@@ -1,0 +1,14 @@
+T1	DS 0 10	Probiotics
+T2	DS 12 22	prebiotics
+T3	DS 121 131	probiotics
+T4	DS 393 403	probiotics
+T5	DS 453 466	Lactobacillus
+T6	DS 471 486	Bifidobacterium
+T7	DS 505 515	probiotics
+T8	DS 552 561	probiotic
+T9	DS 651 660	probiotic
+T10	DS 815 824	probiotic
+T11	DS 892 901	probiotic
+T12	DS 943 952	probiotic
+T13	DS 1090 1100	probiotics
+T14	DS 1102 1112	prebiotics

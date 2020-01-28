@@ -1,0 +1,18 @@
+T1	DS 48 54	niacin
+T2	DS 127 139	nicotinamide
+T3	DS 144 158	nicotinic acid
+T4	DS 185 199	Nicotinic acid
+T5	DS 204 216	nicotinamide
+T6	DS 246 255	vitamin B
+T7	DS 352 366	nicotinic acid
+T8	DS 471 485	nicotinic acid
+T9	DS 637 651	nicotinic acid
+T10	DS 656 668	nicotinamide
+T11	DS 822 836	nicotinic acid
+T12	DS 840 852	nicotinamide
+T13	DS 1041 1055	nicotinic acid
+T14	DS 1059 1071	nicotinamide
+T15	DS 1612 1626	nicotinic acid
+T16	DS 1814 1828	nicotinic acid
+T17	DS 1974 1988	nicotinic acid
+T18	DS 2076 2090	nicotinic acid

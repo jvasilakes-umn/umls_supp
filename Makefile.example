@@ -1,0 +1,259 @@
+.PHONY: check_files coverage_clean ner_clean
+
+#################################################################################
+# PROJECT CONFIGURATION (You can change these)                                  #
+#################################################################################
+
+PYTHON_INTERPRETER = python3
+BASEDIR = $(shell pwd)
+
+METATHESAURUS_VERSION = 2019AB
+METATHESAURUS_DIR = /path/to/Metathesaurus/2019AB/META/
+
+IDISK_VERSION = 1.0.1
+IDISK_VERSION_DIR = /path/to/iDISK_release/1.0.1
+
+LUINORM_BINARY = /path/to/lvg2018lite/bin/luiNorm
+
+
+#################################################################################
+# PROJECT RULES                                                                 #
+#################################################################################
+
+requirements:
+	pip install -U pip setuptools wheel
+	pip install -r $(BASEDIR)/requirements.txt
+	python -m spacy download en
+	## git clone https://github.com/zhang-informatics/iDISK
+	git clone https://github.com/zhang-informatics/iDISK
+	cd $(BASEDIR)/iDISK/lib/idlib; pip install -r requirements.txt; \
+		python setup.py develop
+
+
+check_files:
+ifeq (,$(wildcard $(METATHESAURUS_DIR)))
+	@echo "*** $(METATHESAURUS_DIR) does not exist! ***"
+endif
+ifeq (,$(wildcard $(IDISK_VERSION_DIR)))
+	@echo "*** $(IDISK_VERSION_DIR) does not exist! ***"
+endif
+ifeq (,$(wildcard $(LUINORM_BINARY)))
+	@echo "*** $(LUINORM_BINARY) does not exist! ***"
+endif
+
+
+clean_all: coverage_clean ner_clean
+
+experiments: coverage_run_all ner_prepare_all ner_run_all
+
+
+#################################################################################
+# COVERAGE EXPERIMENTS
+#################################################################################
+
+COVERAGE_DIR = $(BASEDIR)/coverage
+
+coverage_run_all: coverage_match coverage_summary
+
+coverage_clean:
+	rm -r $(COVERAGE_DIR)/results/iDISK-$(IDISK_VERSION)_UMLS-$(METATHESAURUS_VERSION)/
+
+coverage_match:
+	mkdir -p $(COVERAGE_DIR)/results/iDISK-$(IDISK_VERSION)_UMLS-$(METATHESAURUS_VERSION)/
+	$(PYTHON_INTERPRETER) $(COVERAGE_DIR)/src/match_idisk_to_umls.py \
+		--umls_mrconso $(METATHESAURUS_DIR)/MRCONSO.RRF \
+		--umls_mrsty $(METATHESAURUS_DIR)/MRSTY.RRF \
+		--idisk_version_dir $(IDISK_VERSION_DIR) \
+		--luinorm_bin $(LUINORM_BINARY) \
+		--outfile $(COVERAGE_DIR)/results/iDISK-$(IDISK_VERSION)_UMLS-$(METATHESAURUS_VERSION)/matches.json
+
+
+coverage_summary:
+	$(PYTHON_INTERPRETER) $(COVERAGE_DIR)/src/coverage_summary.py \
+		--infile $(COVERAGE_DIR)/results/iDISK-$(IDISK_VERSION)_UMLS-$(METATHESAURUS_VERSION)/matches.json \
+		--outdir $(COVERAGE_DIR)/results/iDISK-$(IDISK_VERSION)_UMLS-$(METATHESAURUS_VERSION)/
+	@echo "Summary saved to $(COVERAGE_DIR)/results/iDISK-$(IDISK_VERSION)_UMLS-$(METATHESAURUS_VERSION)/"
+
+
+#################################################################################
+# NER EXPERIMENTS
+#################################################################################
+
+NER_DIR = $(BASEDIR)/ner
+DS_PUBMED_DIRS = $(NER_DIR)/data/raw/annotator1 \
+		 $(NER_DIR)/data/raw/annotator2
+## Used to get the UMLS dietary supplements term list.
+## C0242295: Dietary Supplements
+## C0042890: Vitamins
+SUPPLEMENT_CUIS = C0242295,C0042890
+
+ner_prepare_all: ner_prepare_gold_standard ner_prepare_term_lists ner_prepare_models 
+
+ner_run_all: ner_prepare_all ner_run ner_evaluate
+
+ner_clean:
+	rm -r $(NER_DIR)/data/processed/
+	rm -r $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)/
+	rm -r $(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION)/
+	rm -r $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)
+	rm -r $(NER_DIR)/lib/quickumls_installs/*
+	rm -r $(NER_DIR)/results/*
+
+
+ner_prepare_gold_standard:
+	mkdir -p $(NER_DIR)/data/processed/
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/convert_brat_to_json.py \
+		--anndirs $(DS_PUBMED_DIRS) \
+		--outdir $(NER_DIR)/data/processed/
+
+
+ner_prepare_term_lists:
+	# UMLS_DS
+	mkdir -p $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)/
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/get_related_umls_concepts.py \
+		--cuis $(SUPPLEMENT_CUIS) \
+		--mrconso $(METATHESAURUS_DIR)/MRCONSO.RRF \
+		--mrsty $(METATHESAURUS_DIR)/MRSTY.RRF \
+		--mrrel $(METATHESAURUS_DIR)/MRREL.RRF \
+		--stopwords $(NER_DIR)/data/external/stopwords.txt \
+		--outdir $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)/
+	# iDISK
+	mkdir -p $(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION)/
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/idisk2rrf.py \
+		--idisk_version_dir $(IDISK_VERSION_DIR) \
+		--umls_mrsty $(METATHESAURUS_DIR)/MRSTY.RRF \
+		--umls_semantic_types $(NER_DIR)/data/external/SemanticTypes_2018AB.txt \
+		--stopwords $(NER_DIR)/data/external/stopwords.txt \
+		--outdir $(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION)/
+	# Combined
+	mkdir -p $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/
+	cat $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)/MRCONSO.RRF \
+	    $(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION)/MRCONSO.RRF \
+	    > $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/MRCONSO.RRF
+	cat $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)/MRSTY.RRF \
+	    $(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION)/MRSTY.RRF \
+	    > $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/MRSTY.RRF
+
+
+ner_prepare_models:
+	# UMLS_DS
+	mkdir -p $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)/
+	$(PYTHON_INTERPRETER) -m quickumls.install --lowercase \
+		$(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)/ \
+		$(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)/
+	# iDISK
+	mkdir -p $(NER_DIR)/lib/quickumls_installs/iDISK_$(IDISK_VERSION)
+	$(PYTHON_INTERPRETER) -m quickumls.install --lowercase \
+		$(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION) \
+		$(NER_DIR)/lib/quickumls_installs/iDISK_$(IDISK_VERSION)
+	# Combined
+	mkdir -p $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)
+	$(PYTHON_INTERPRETER) -m quickumls.install --lowercase \
+		$(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/ \
+		$(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/
+
+
+ner_run:
+	@echo "UMLS_DS"
+	mkdir -p $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)/
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/run_quickumls.py \
+		--quickumls_install_dir $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)/ \
+		--documents $(NER_DIR)/data/processed/abstracts.json \
+		--quickumls_conf $(NER_DIR)/conf/quickumls.json \
+		--outfile $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)/predictions.json \
+		> $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)/predictions.json.log
+	@echo "iDISK"
+	mkdir -p $(NER_DIR)/results/iDISK_$(IDISK_VERSION)/
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/run_quickumls.py \
+		--quickumls_install_dir $(NER_DIR)/lib/quickumls_installs/iDISK_$(IDISK_VERSION) \
+		--documents $(NER_DIR)/data/processed/abstracts.json \
+		--quickumls_conf $(NER_DIR)/conf/quickumls.json \
+		--outfile $(NER_DIR)/results/iDISK_$(IDISK_VERSION)/predictions.json \
+		> $(NER_DIR)/results/iDISK_$(IDISK_VERSION)/predictions.json.log
+	@echo "Combined"
+	mkdir -p $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/run_quickumls.py \
+		--quickumls_install_dir $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION) \
+		--documents $(NER_DIR)/data/processed/abstracts.json \
+		--quickumls_conf $(NER_DIR)/conf/quickumls.json \
+		--outfile $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/predictions.json \
+		> $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/predictions.json.log
+
+
+ner_evaluate:
+	@echo "UMLS_DS"
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/evaluate.py \
+		--predictions $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)/predictions.json \
+		--gold_standard $(NER_DIR)/data/processed/gold_standard.json \
+		--outdir $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)/
+	@echo "iDISK"
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/evaluate.py \
+		--predictions $(NER_DIR)/results/iDISK_$(IDISK_VERSION)/predictions.json \
+		--gold_standard $(NER_DIR)/data/processed/gold_standard.json \
+		--outdir $(NER_DIR)/results/iDISK_$(IDISK_VERSION)
+	@echo "UMLS_DS+iDISK"
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/evaluate.py \
+		--predictions $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/predictions.json \
+		--gold_standard $(NER_DIR)/data/processed/gold_standard.json \
+		--outdir $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)
+
+#################################################################################
+# Self Documenting Commands                                                     #
+#################################################################################
+
+.DEFAULT_GOAL := help
+
+# Inspired by <http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html>
+# sed script explained:
+# /^##/:
+# 	* save line in hold space
+# 	* purge line
+# 	* Loop:
+# 		* append newline + line to hold space
+# 		* go to next line
+# 		* if line starts with doc comment, strip comment character off and loop
+# 	* remove target prerequisites
+# 	* append hold space (+ newline) to line
+# 	* replace newline plus comments by `---`
+# 	* print line
+# Separate expressions are necessary because labels cannot be delimited by
+# semicolon; see <http://stackoverflow.com/a/11799865/1968>
+.PHONY: help
+help:
+	@echo "$$(tput bold)Available rules:$$(tput sgr0)"
+	@echo
+	@sed -n -e "/^## / { \
+		h; \
+		s/.*//; \
+		:doc" \
+		-e "H; \
+		n; \
+		s/^## //; \
+		t doc" \
+		-e "s/:.*//; \
+		G; \
+		s/\\n## /---/; \
+		s/\\n/ /g; \
+		p; \
+	}" ${MAKEFILE_LIST} \
+	| LC_ALL='C' sort --ignore-case \
+	| awk -F '---' \
+		-v ncol=$$(tput cols) \
+		-v indent=19 \
+		-v col_on="$$(tput setaf 6)" \
+		-v col_off="$$(tput sgr0)" \
+	'{ \
+		printf "%s%*s%s ", col_on, -indent, $$1, col_off; \
+		n = split($$2, words, " "); \
+		line_length = ncol - indent; \
+		for (i = 1; i <= n; i++) { \
+			line_length -= length(words[i]) + 1; \
+			if (line_length <= 0) { \
+				line_length = ncol - indent - length(words[i]) - 1; \
+				printf "\n%*s ", -indent, " "; \
+			} \
+			printf "%s ", words[i]; \
+		} \
+		printf "\n"; \
+	}' \
+	| more $(shell test $(shell uname) = Darwin && echo '--no-init --raw-control-chars')

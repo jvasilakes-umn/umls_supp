@@ -1,0 +1,19 @@
+T1	DS 393 403	vitamins C
+T2	DS 12 22	carotenoid
+T3	DS 458 469	carotenoids
+T4	DS 471 481	α-carotene
+T5	DS 483 493	β-carotene
+T6	DS 495 501	lutein
+T7	DS 507 517	zeaxanthin
+T8	DS 519 527	lycopene
+T9	DS 533 548	β-cryptoxanthin
+T10	DS 1176 1186	carotenoid
+T11	DS 1310 1319	vitamin C
+T12	DS 1759 1768	vitamin E
+T13	DS 1770 1780	α-carotene
+T14	DS 1782 1792	β-carotene
+T15	DS 1794 1802	lycopene
+T16	DS 1808 1814	lutein
+T17	DS 1820 1830	zeaxanthin
+T18	DS 1851 1860	vitamin E
+T19	DS 2043 2052	vitamin C

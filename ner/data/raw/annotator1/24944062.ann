@@ -1,0 +1,25 @@
+T1	DS 0 10	Folic acid
+T2	DS 195 205	folic acid
+T3	DS 207 230	pterylmonoglutamic acid
+T4	DS 387 415	5-methyltetrahydrofolic acid
+T5	DS 417 423	5-MTHF
+T6	DS 541 551	folic acid
+T7	DS 598 604	5-MTHF
+T8	DS 822 832	folic acid
+T9	DS 855 883	5-formyltetrahydrofolic acid
+T10	DS 885 896	5-FormylTHF
+T11	DS 1090 1100	folic acid
+T12	DS 1220 1231	5-FormylTHF
+T13	DS 1298 1309	5-FormylTHF
+T14	DS 1346 1352	5-MTHF
+T15	DS 249 264	vitamin folates
+T16	DS 1171 1181	folic acid
+T17	DS 1474 1481	folates
+T18	DS 1485 1491	5-MTHF
+T19	DS 1522 1532	folic acid
+T20	DS 1573 1583	folic acid
+T21	DS 1789 1795	5-MTHF
+T22	DS 1735 1755	tetrahydrofolic acid
+T23	DS 1865 1875	folic acid
+T24	DS 1983 1993	folic acid
+T25	DS 2105 2115	folic acid

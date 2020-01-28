@@ -1,0 +1,9 @@
+T1	DS 20 42	multiple micronutrient
+T2	DS 334 356	multiple micronutrient
+T3	DS 358 360	MM
+T4	DS 500 502	MM
+T5	DS 533 537	iron
+T6	DS 538 548	folic acid
+T7	DS 1082 1084	MM
+T8	DS 1822 1824	MM
+T9	DS 550 553	IFA

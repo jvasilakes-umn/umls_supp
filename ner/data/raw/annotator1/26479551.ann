@@ -1,0 +1,4 @@
+T1	DS 32 41	vitamin D
+T2	DS 46 59	ascorbic acid
+T3	DS 825 834	vitamin D
+T4	DS 839 852	ascorbic acid

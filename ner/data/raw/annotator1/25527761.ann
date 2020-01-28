@@ -1,0 +1,17 @@
+T1	DS 0 7	Calcium
+T2	DS 12 22	phosphorus
+T3	DS 97 104	calcium
+T4	DS 263 273	phosphorus
+T5	DS 364 371	calcium
+T6	DS 376 386	phosphorus
+T7	DS 795 802	calcium
+T8	DS 807 817	phosphorus
+T9	DS 898 905	Calcium
+T10	DS 1099 1109	phosphorus
+T11	DS 1135 1145	Phosphorus
+T12	DS 1326 1333	calcium
+T13	DS 1338 1348	phosphorus
+T14	DS 1432 1439	Calcium
+T15	DS 1563 1573	phosphorus
+T16	DS 1685 1695	Phosphorus
+T17	DS 1776 1783	Calcium

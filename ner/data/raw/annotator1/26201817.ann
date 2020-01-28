@@ -1,0 +1,32 @@
+T1	DS 0 10	Pyridoxine
+T2	DS 124 134	tryptophan
+T3	DS 150 161	vitamin B-6
+T4	DS 225 236	vitamin B-6
+T5	DS 377 399	pyridoxal 5'-phosphate
+T6	DS 401 404	PLP
+T7	DS 437 448	vitamin B-6
+T8	DS 511 521	tryptophan
+T9	DS 576 587	vitamin B-6
+T10	DS 693 703	tryptophan
+T11	DS 790 808	[(13)C5]methionine
+T12	DS 810 825	[3-(13)C]serine
+T13	DS 831 845	[(2)H3]leucine
+T14	DS 979 1007	pyridoxine hydrochloric acid
+T15	DS 1035 1047	homocysteine
+T16	DS 1084 1096	homocysteine
+T17	DS 1102 1108	serine
+T18	DS 1123 1135	homocysteine
+T19	DS 1140 1153	cystathionine
+T20	DS 1371 1381	Pyridoxine
+T21	DS 1697 1709	homocysteine
+T22	DS 1745 1757	homocysteine
+T23	DS 1762 1775	cystathionine
+T24	DS 1886 1893	Leucine
+T25	DS 1895 1902	glycine
+T26	DS 1904 1911	choline
+T27	DS 1913 1921	cysteine
+T28	DS 1923 1934	glutathione
+T29	DS 1936 1958	trimethylamine N-oxide
+T30	DS 2192 2203	vitamin B-6
+T31	DS 2325 2336	vitamin B-6
+T32	DS 2477 2488	vitamin B-6

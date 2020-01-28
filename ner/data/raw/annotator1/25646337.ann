@@ -1,0 +1,11 @@
+T1	DS 14 34	lipid-based nutrient
+T2	DS 340 371	lipid-based nutrient supplement
+T5	DS 752 767	iron-folic acid
+T6	DS 769 772	IFA
+T7	DS 806 829	multiple micronutrients
+T8	DS 831 835	MMNs
+T9	DS 868 871	LNS
+T11	DS 2222 2228	SQ-LNS
+T10	DS 860 866	SQ-LNS
+T4	DS 525 531	SQ-LNS
+T3	DS 373 379	SQ-LNS

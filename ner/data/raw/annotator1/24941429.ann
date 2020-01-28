@@ -1,0 +1,7 @@
+T1	DS 12 32	Multivitamin/mineral
+T2	DS 240 260	multivitamin/mineral
+T3	DS 262 265	MVM
+T4	DS 547 550	MVM
+T5	DS 669 672	MVM
+T6	DS 1139 1142	MVM
+T7	DS 1640 1643	MVM

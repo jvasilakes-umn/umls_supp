@@ -1,0 +1,11 @@
+T1	DS 0 6	Lutein
+T2	DS 11 21	Zeaxanthin
+T3	DS 83 89	lutein
+T4	DS 336 346	xanthophyl
+T5	DS 368 379	carotenoids
+T6	DS 608 614	lutein
+T7	DS 616 626	zeaxanthin
+T8	DS 632 647	meso-zeaxanthin
+T9	DS 885 896	carotenoids
+T10	DS 1058 1064	lutein
+T11	DS 1069 1079	zeaxanthin

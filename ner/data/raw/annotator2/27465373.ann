@@ -1,0 +1,13 @@
+T1	DS 7 13	folate
+T2	DS 15 26	vitamin B-6
+T3	DS 32 44	vitamin B-12
+T4	DS 140 150	B vitamins
+T5	DS 152 164	vitamins B-6
+T6	DS 166 169	B-9
+T7	DS 171 177	folate
+T8	DS 184 188	B-12
+T9	DS 413 419	folate
+T10	DS 424 434	folic acid
+T11	DS 454 460	folate
+T12	DS 1292 1301	B vitamin
+T13	DS 2078 2084	folate

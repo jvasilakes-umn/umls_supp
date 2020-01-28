@@ -1,0 +1,19 @@
+T1	DS 31 51	Lactic Acid Bacteria
+T2	DS 56 70	Bifidobacteria
+T3	DS 230 240	probiotics
+T4	DS 245 255	prebiotics
+T5	DS 459 468	probiotic
+T6	DS 481 490	prebiotic
+T7	DS 554 572	exopolysaccharides
+T8	DS 0 18	Exopolysaccharides
+T9	DS 585 604	homopolysaccharides
+T10	DS 574 577	EPS
+T11	DS 606 610	HoPS
+T12	DS 616 637	heteropolysaccharides
+T13	DS 639 643	HePS
+T14	DS 661 681	lactic acid bacteria
+T15	DS 686 700	bifidobacteria
+T16	DS 714 724	prebiotics
+T17	DS 1109 1113	HoPS
+T18	DS 1118 1122	HePS
+T19	DS 1221 1230	prebiotic

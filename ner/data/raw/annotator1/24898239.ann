@@ -1,0 +1,20 @@
+T1	DS 94 119	n-3 (omega-3) fatty acids
+T2	DS 120 141	eicosapentaenoic acid
+T3	DS 143 146	EPA
+T4	DS 152 172	docosahexaenoic acid
+T5	DS 174 177	DHA
+T6	DS 292 296	fish
+T7	DS 337 341	fish
+T8	DS 372 375	EPA
+T9	DS 380 383	DHA
+T10	DS 425 456	n-3 fatty acid α-linolenic acid
+T11	DS 458 461	ALA
+T12	DS 466 469	EPA
+T13	DS 474 477	DHA
+T14	DS 1404 1407	ALA
+T15	DS 1538 1541	EPA
+T16	DS 1450 1461	soybean oil
+T17	DS 1543 1546	DHA
+T18	DS 1588 1598	microalgae
+T19	DS 1608 1613	yeast
+T20	DS 1643 1653	plant oils

@@ -1,0 +1,18 @@
+T1	DS 10 14	zinc
+T2	DS 19 31	multivitamin
+T3	DS 339 343	zinc
+T4	DS 345 357	multivitamin
+T5	DS 359 369	vitamins C
+T6	DS 378 387	B-complex
+T7	DS 394 398	zinc
+T8	DS 403 415	multivitamin
+T9	DS 417 419	Zn
+T10	DS 420 422	MV
+T11	DS 586 590	zinc
+T12	DS 592 605	multivitamins
+T13	DS 607 609	Zn
+T14	DS 610 613	MVs
+T15	DS 1950 1954	zinc
+T16	DS 1978 1989	multivitami
+T17	DS 2031 2033	Zn
+T18	DS 2034 2036	MV

@@ -1,0 +1,17 @@
+T1	DS 83 119	long chain n-3 (omega-3) fatty acids
+T2	DS 120 141	eicosapentaenoic acid
+T3	DS 143 146	EPA
+T4	DS 152 172	docosahexaenoic acid
+T5	DS 174 177	DHA
+T6	DS 1404 1407	ALA
+T7	DS 1424 1461	stearidonic acid-enriched soybean oil
+T8	DS 1538 1541	EPA
+T9	DS 1543 1546	DHA
+T10	DS 1588 1598	microalgae
+T11	DS 1600 1613	biotech yeast
+T12	DS 1635 1653	biotech plant oils
+T13	DS 292 296	fish
+T14	DS 425 456	n-3 fatty acid α-linolenic acid
+T15	DS 458 461	ALA
+T16	DS 466 469	EPA
+T17	DS 474 477	DHA

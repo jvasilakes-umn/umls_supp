@@ -1,0 +1,13 @@
+T1	DS 10 16	niacin
+T2	DS 26 37	vitamin B-6
+T3	DS 43 55	vitamin B-12
+T4	DS 229 235	niacin
+T5	DS 238 243	olate
+T6	DS 245 256	vitamin B-6
+T7	DS 262 274	vitamin B-12
+T8	DS 404 414	B vitamins
+T9	DS 849 859	B vitamins
+T10	DS 1466 1472	niacin
+T11	DS 1810 1821	vitamin B-6
+T12	DS 1906 1918	vitamin B-12
+T13	DS 2089 2099	B vitamins

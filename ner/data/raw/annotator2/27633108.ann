@@ -1,0 +1,16 @@
+T1	DS 0 10	Probiotics
+T2	DS 12 22	Prebiotics
+T3	DS 28 38	Synbiotics
+T4	DS 696 706	probiotics
+T5	DS 711 720	prebiotic
+T6	DS 845 855	Probiotics
+T7	DS 914 924	prebiotics
+T8	DS 1175 1185	probiotics
+T9	DS 1189 1199	prebiotics
+T10	DS 1415 1425	synbiotics
+T11	DS 1471 1481	Synbiotics
+T12	DS 1500 1510	probiotics
+T13	DS 1515 1525	prebiotics
+T14	DS 1698 1707	probiotic
+T15	DS 1710 1719	prebiotic
+T16	DS 1726 1735	synbiotic

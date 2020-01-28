@@ -1,0 +1,9 @@
+T1	DS 0 9	Prebiotic
+T2	DS 10 13	nut
+T3	DS 161 175	nut fatty acid
+T5	DS 246 258	phytosterols
+T6	DS 263 272	phenolics
+T7	DS 314 324	prebiotics
+T8	DS 383 387	nuts
+T9	DS 401 412	polyphenols
+T10	DS 417 432	polysaccharides

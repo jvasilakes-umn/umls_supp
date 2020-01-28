@@ -1,0 +1,7 @@
+{
+ "overlapping_criteria": "score",
+ "threshold": 0.7,
+ "accepted_semtypes": ["T116", "T123", "T103", "T196", "T125", "T129",
+                       "T197", "T114", "T109", "T121", "T127", "T007",
+                       "T013", "T004", "T002", "T168"]
+}

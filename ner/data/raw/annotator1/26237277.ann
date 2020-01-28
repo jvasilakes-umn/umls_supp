@@ -1,0 +1,12 @@
+T1	DS 27 35	n-3 PUFA
+T2	DS 127 158	n-3 polyunsaturated fatty acids
+T3	DS 160 168	n-3 PUFA
+T4	DS 760 776	eicosatetraenoic
+T5	DS 781 796	docosahexaenoic
+T6	DS 183 187	Pork
+T7	DS 326 330	pork
+T8	DS 441 445	Pork
+T9	DS 475 498	unsaturated fatty acids
+T10	DS 800 804	pork
+T11	DS 994 1002	n-3 PUFA
+T12	DS 1024 1039	n-3 fatty acids

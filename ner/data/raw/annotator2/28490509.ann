@@ -1,0 +1,15 @@
+T1	DS 0 9	Vitamin D
+T2	DS 14 21	calcium
+T3	DS 382 391	vitamin D
+T4	DS 454 463	vitamin D
+T5	DS 468 475	calcium
+T6	DS 598 607	vitamin D
+T7	DS 612 619	calcium
+T8	DS 1021 1030	vitamin D
+T9	DS 1035 1042	calcium
+T10	DS 1227 1236	vitamin D
+T11	DS 1435 1442	calcium
+T12	DS 1694 1703	vitamin D
+T13	DS 1708 1715	calcium
+T14	DS 1893 1902	vitamin D
+T15	DS 1907 1914	calcium

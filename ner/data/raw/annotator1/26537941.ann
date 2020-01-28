@@ -1,0 +1,22 @@
+T1	DS 120 152	lipid-based nutrient supplements
+T2	DS 227 236	B vitamin
+T3	DS 306 315	B vitamin
+T4	DS 469 501	lipid-based nutrient supplements
+T5	DS 503 506	LNS
+T6	DS 512 521	B vitamin
+T7	DS 868 871	LNS
+T8	DS 1005 1008	LNS
+T9	DS 1068 1075	thiamin
+T10	DS 1077 1087	riboflavin
+T11	DS 1089 1095	niacin
+T12	DS 1097 1107	pyridoxine
+T13	DS 1113 1125	vitamin B-12
+T14	DS 1172 1175	LNS
+T15	DS 1289 1301	nicotinamide
+T16	DS 1303 1312	pyridoxal
+T17	DS 1318 1330	vitamin B-12
+T18	DS 1563 1573	B vitamins
+T19	DS 1637 1647	B vitamins
+T20	DS 1795 1805	B vitamins
+T21	DS 1820 1823	LNS
+T22	DS 1935 1938	LNS

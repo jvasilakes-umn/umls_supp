@@ -1,0 +1,9 @@
+T2	DS 64 74	vitamin D3
+T6	DS 190 199	vitamin D
+T8	DS 383 392	vitamin D
+T9	DS 609 618	vitamin D
+T12	DS 816 826	vitamin D3
+T13	DS 886 896	vitamin D3
+T4	DS 1966 1975	vitamin D
+T1	DS 0 9	Vitamin D
+T3	DS 152 161	vitamin D

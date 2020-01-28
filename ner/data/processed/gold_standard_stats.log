@@ -1,0 +1,6 @@
+/Users/vasil024/Projects/InProgressProjects/umls_idisk_extension.test/ner/data/raw/annotator1
+{'total_anns': 3908, 'avg_anns_per_file': 9.349282296650717, 'unique_terms': 399}
+
+/Users/vasil024/Projects/InProgressProjects/umls_idisk_extension.test/ner/data/raw/annotator2
+{'total_anns': 3910, 'avg_anns_per_file': 9.354066985645943, 'unique_terms': 416}
+

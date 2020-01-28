@@ -1,0 +1,15 @@
+T1	DS 0 12	Vitamin B-12
+T2	DS 153 165	vitamin B-12
+T3	DS 220 232	vitamin B-12
+T4	DS 277 289	vitamin B-12
+T5	DS 377 389	vitamin B-12
+T6	DS 443 455	vitamin B-12
+T7	DS 553 565	vitamin B-12
+T8	DS 595 606	vitamin B-6
+T9	DS 618 629	vitamin B-1
+T10	DS 634 646	vitamin B-12
+T11	DS 1003 1015	Vitamin B-12
+T12	DS 1048 1060	vitamin B-12
+T13	DS 1186 1198	vitamin B-12
+T14	DS 2138 2150	vitamin B-12
+T15	DS 2228 2240	vitamin B-12

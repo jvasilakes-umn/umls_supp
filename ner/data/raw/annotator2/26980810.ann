@@ -1,0 +1,16 @@
+T1	DS 0 7	Calcium
+T2	DS 182 189	calcium
+T3	DS 711 718	calcium
+T4	DS 745 752	calcium
+T5	DS 772 779	calcium
+T6	DS 925 932	calcium
+T7	DS 992 999	calcium
+T8	DS 1130 1137	calcium
+T9	DS 1203 1210	calcium
+T10	DS 1260 1267	calcium
+T11	DS 1277 1281	iron
+T12	DS 1286 1296	folic acid
+T13	DS 1298 1301	IFA
+T14	DS 1410 1417	Calcium
+T15	DS 1609 1616	calcium
+T16	DS 1621 1624	IFA

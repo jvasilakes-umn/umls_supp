@@ -1,0 +1,16 @@
+T1	DS 0 5	Fiber
+T2	DS 604 609	Fiber
+T3	DS 1075 1080	fiber
+T4	DS 1704 1709	fiber
+T5	DS 1883 1889	fibers
+T7	DS 351 363	polydextrose
+T6	DS 378 396	soluble corn fiber
+T8	DS 398 401	SCF
+T9	DS 1988 2000	polydextrose
+T10	DS 2005 2008	SCF
+T11	DS 2230 2235	fiber
+T12	DS 1397 1402	fiber
+T13	DS 1535 1547	polydextrose
+T14	DS 1552 1555	SCF
+T15	DS 1891 1903	polydextrose
+T16	DS 1908 1911	SCF

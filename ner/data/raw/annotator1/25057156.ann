@@ -1,0 +1,13 @@
+T1	DS 27 36	vitamin D
+T2	DS 265 274	vitamin D
+T3	DS 407 414	Calcium
+T4	DS 418 427	vitamin D
+T5	DS 638 648	vitamin D₃
+T6	DS 661 668	calcium
+T7	DS 682 691	vitamin D
+T8	DS 1002 1011	vitamin D
+T9	DS 1380 1389	vitamin D
+T10	DS 1656 1665	vitamin D
+T11	DS 1852 1861	Vitamin D
+T12	DS 697 704	calcium
+T13	DS 124 143	25-hydroxyvitamin D

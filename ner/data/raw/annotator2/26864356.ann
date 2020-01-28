@@ -1,0 +1,10 @@
+T1	DS 0 12	Whey protein
+T2	DS 14 25	amino acids
+T3	DS 31 40	vitamin D
+T4	DS 465 477	whey protein
+T5	DS 496 507	amino acids
+T6	DS 531 538	leucine
+T7	DS 545 554	vitamin D
+T8	DS 1866 1878	whey protein
+T9	DS 1890 1901	amino acids
+T10	DS 1907 1916	vitamin D

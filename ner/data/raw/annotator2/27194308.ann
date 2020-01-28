@@ -1,0 +1,9 @@
+T1	DS 0 9	Vitamin D
+T2	DS 105 114	vitamin D
+T7	DS 708 715	Calcium
+T8	DS 720 729	Vitamin D
+T6	DS 760 769	Vitamin D
+T9	DS 983 998	cholecalciferol
+T10	DS 2045 2060	Cholecalciferol
+T12	DS 61 70	vitamin D
+T3	DS 472 487	cholecalciferol

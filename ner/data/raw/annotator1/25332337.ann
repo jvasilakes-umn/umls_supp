@@ -1,0 +1,27 @@
+T1	DS 12 21	glutamine
+T2	DS 127 135	Arginine
+T3	DS 228 236	arginine
+T4	DS 360 369	Glutamine
+T5	DS 418 426	arginine
+T6	DS 511 520	glutamine
+T7	DS 577 585	arginine
+T8	DS 642 650	arginine
+T9	DS 681 690	glutamine
+T10	DS 764 772	arginine
+T11	DS 826 845	glutamine dipeptide
+T12	DS 921 930	glutamine
+T13	DS 932 942	citrulline
+T14	DS 948 956	arginine
+T15	DS 1065 1081	alanyl-glutamine
+T16	DS 1325 1334	glutamine
+T17	DS 1416 1424	arginine
+T18	DS 1477 1485	arginine
+T19	DS 1502 1512	citrulline
+T20	DS 1288 1298	citrulline
+T21	DS 1362 1372	citrulline
+T22	DS 1527 1536	Glutamine
+T23	DS 1541 1551	citrulline
+T24	DS 1586 1594	arginine
+T25	DS 1774 1783	glutamine
+T26	DS 1809 1817	arginine
+T27	DS 1834 1844	citrulline

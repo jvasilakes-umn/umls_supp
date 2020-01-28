@@ -1,0 +1,25 @@
+T1	DS 0 11	Carotenoids
+T2	DS 13 22	vitamin A
+T3	DS 24 33	vitamin C
+T4	DS 35 44	vitamin E
+T5	DS 50 56	folate
+T6	DS 363 374	carotenoids
+T7	DS 376 385	vitamin A
+T8	DS 387 396	vitamin C
+T9	DS 398 407	vitamin E
+T10	DS 413 419	folate
+T11	DS 1046 1056	β-carotene
+T12	DS 1061 1076	β-cryptoxanthin
+T13	DS 1295 1305	β-carotene
+T14	DS 1357 1372	β-cryptoxanthin
+T15	DS 1404 1410	folate
+T16	DS 1441 1447	folate
+T17	DS 1685 1694	vitamin A
+T18	DS 1670 1681	carotenoids
+T19	DS 1703 1712	vitamin C
+T20	DS 1824 1833	vitamin C
+T21	DS 1970 1979	vitamin E
+T22	DS 2027 2037	β-carotene
+T23	DS 2039 2054	β-cryptoxanthin
+T24	DS 2060 2066	folate
+T25	DS 2159 2168	vitamin C

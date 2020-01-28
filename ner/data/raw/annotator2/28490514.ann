@@ -1,0 +1,14 @@
+T1	DS 0 9	Vitamin D
+T2	DS 179 188	Vitamin D
+T3	DS 350 359	vitamin D
+T4	DS 390 399	vitamin D
+T5	DS 653 662	vitamin D
+T6	DS 884 893	vitamin D
+T7	DS 1177 1192	cholecalciferol
+T8	DS 1213 1227	cholecalcifero
+T9	DS 1680 1687	25(OH)D
+T10	DS 1703 1712	vitamin D
+T11	DS 2208 2217	vitamin D
+T12	DS 2248 2257	Vitamin D
+T13	DS 2400 2409	vitamin D
+T14	DS 2487 2496	vitamin D

@@ -1,0 +1,9 @@
+T1	DS 0 9	Vitamin D
+T2	DS 115 124	vitamin D
+T3	DS 333 342	vitamin D
+T4	DS 630 639	vitamin D
+T5	DS 409 428	25-hydroxyvitamin D
+T6	DS 430 437	25(OH)D
+T7	DS 1078 1087	vitamin D
+T8	DS 1230 1239	vitamin D
+T9	DS 1460 1469	vitamin D

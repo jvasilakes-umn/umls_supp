@@ -1,0 +1,7 @@
+T1	DS 1144 1153	vitamin A
+T2	DS 1155 1166	vitamin B-6
+T3	DS 1168 1180	vitamin B-12
+T4	DS 1182 1192	folic acid
+T5	DS 1194 1203	vitamin C
+T6	DS 1205 1214	vitamin D
+T7	DS 1216 1225	vitamin E
