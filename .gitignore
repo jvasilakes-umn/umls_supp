@@ -5,3 +5,4 @@ iDISK*
 ner/lib/quickumls_installs
 ner/lib/rrf_files
 ner/data/external/*.pickle
+*.docx
