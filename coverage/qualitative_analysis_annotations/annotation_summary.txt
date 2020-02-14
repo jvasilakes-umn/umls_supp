@@ -1,0 +1,21 @@
+'Objects' and 'Anatomy' both get mapped to 'Living Beings'
+
+Total annotated atoms: 1000
+Number unannotated: 23
+
+Number annotated: 977
+  SEMANTIC: 736 (0.75)
+  LEXICAL: 241 (0.25)
+
+SEMANTIC: 736
+  {'Living Beings'}: 547 (0.74)
+  {'Chemicals & Drugs'}: 135 (0.18)
+  {'Objects'}: 41 (0.06)
+  {'Anatomy'}: 11 (0.01)
+  {'Objects', 'Chemicals & Drugs'}: 2 (0.00)
+LEXICAL: 241
+  {'Chemicals & Drugs'}: 131 (0.54)
+  {'Living Beings'}: 67 (0.28)
+  {'Objects'}: 30 (0.12)
+  {'Anatomy'}: 12 (0.05)
+  {'Objects', 'Chemicals & Drugs'}: 1 (0.00)

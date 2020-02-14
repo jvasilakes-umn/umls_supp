@@ -37,9 +37,9 @@ def coverage_summary(matches):
     prop_norm_match = len(norm_matched) / num_atoms
 
     outstr += f"Number of Atoms: {num_atoms}\n"
-    outstr += f"  Total matches: {len(all_matched)} ({prop_all_match:.2f})\n"
-    outstr += f"  Exact matches: {len(exact_matched)} ({prop_exact_match:.2f})\n"  # noqa
-    outstr += f"  Normalized matches: {len(norm_matched)} ({prop_norm_match:.2f})\n"  # noqa
+    outstr += f"  Total matches: {len(all_matched)} ({prop_all_match:.4f})\n"
+    outstr += f"  Exact matches: {len(exact_matched)} ({prop_exact_match:.4f})\n"  # noqa
+    outstr += f"  Normalized matches: {len(norm_matched)} ({prop_norm_match:.4f})\n"  # noqa
 
     # The number of unique terms.
     num_terms = len({m["term"].lower() for cui in matches.keys()
@@ -47,21 +47,26 @@ def coverage_summary(matches):
     terms_matched = {m["term"].lower() for m in all_matched}
     terms_exact = {m["term"].lower() for m in exact_matched}
     terms_norm = {m["term"].lower() for m in norm_matched}
+    norm_added = terms_norm.difference(terms_exact)
     prop_all_match = len(terms_matched) / num_terms
     prop_exact_match = len(terms_exact) / num_terms
-    prop_norm_match = len(terms_norm) / num_terms
+    prop_norm_match = len(norm_added) / num_terms
+    matched_cuis = {cui for match in all_matched for cui in match["umls_cuis"]}
+    print(list(matched_cuis)[:10])
 
     outstr += f"\nNumber of unique terms: {num_terms}\n"
-    outstr += f"  Unique terms matched: {len(terms_matched)} ({prop_all_match:.2f})\n"  # noqa
-    outstr += f"  Exact matches: {len(terms_exact)} ({prop_exact_match:.2f})\n"
-    outstr += f"  Normalized matches: {len(terms_norm)} ({prop_norm_match:.2f})\n"  # noqa
+    outstr += f"  Unique terms matched: {len(terms_matched)} ({prop_all_match:.4f})\n"  # noqa
+    outstr += f"  Exact matches: {len(terms_exact)} ({prop_exact_match:.4f})\n"
+    outstr += f"  Normalized matches: {len(norm_added)} ({prop_norm_match:.4f})\n"  # noqa
+    outstr += f"  Number of UMLS CUIs: {len(matched_cuis)}\n"
     return outstr
 
 
 def plot_matching_stats(matches, outdir):
-    outfile = os.path.join(outdir, "atoms_per_concept.png")
-    plot_atoms_per_concept(matches, outfile)
-    plot_match_stats(matches, outdir)
+    outfile = os.path.join(outdir, "proportion_atoms_matched.png")
+    plot_proportion_atoms_matched(matches, outfile)
+    outfile = os.path.join(outdir, "umls_cuis_per_concept.png")
+    plot_num_umls_cuis(matches, outfile)
 
 
 def plot_atoms_per_concept(matches, outfile):
@@ -73,61 +78,49 @@ def plot_atoms_per_concept(matches, outfile):
     plt.savefig(outfile)
 
 
-def plot_matches_per_concept(matches, outfile):
-    matched_proportions = []
-    for cui in matches.keys():
-        atoms = list(matches[cui].values())
-        num_matched = len([m for m in atoms if len(m["umls_cuis"]) > 0])
-        matched_proportions.append(num_matched / len(atoms))
+def plot_num_umls_cuis(matches, outfile):
+    num_cuis = []
+    for idisk_cui in matches:
+        umls_cuis = set()
+        for m in matches[idisk_cui].values():
+            umls_cuis.update(m["umls_cuis"])
+        if len(umls_cuis) > 0:
+            num_cuis.append(len(umls_cuis))
 
-    bins = [f"{start:.2f}-{start+0.09:.2f}"
-            for start in np.linspace(0.0, 1.0, num=11)]
-    bins[-1] = "1.00"
-    bins[0] = "0.01-0.09"
-    bins.insert(0, "0.00")
-    binned_matches = {binn: 0 for binn in bins}
-    for proportion in matched_proportions:
-        if proportion == 0.0:
-            binn_idx = 0
-        else:
-            # We multiply by 10 to avoid rounding errors
-            binn_idx = int((proportion * 10) // 1) + 1
-        binn = bins[binn_idx]
-        binned_matches[binn] += 1
-
-    x_positions = range(len(bins))
-    heights = sorted(binned_matches.values(), reverse=True)
-    labels = bins[::-1]
-    plt.figure()
-    plt.bar(x_positions, heights)
-    plt.xticks(x_positions, labels, rotation=45)
-    plt.title("Number of concepts by proportion of atoms matched")
-    plt.xlabel("Proportion of atoms matched")
-    plt.ylabel("Number of concepts")
+    num_ones = len([n for n in num_cuis if n == 1])
+    num_more = len([n for n in num_cuis if n > 1])
+    logfile = outfile.strip() + ".log"
+    with open(logfile, 'w') as outF:
+        outF.write(f"Number of iDISK concepts mapped to 1 UMLS concept: {num_ones}\n")  # noqa
+        outF.write(f"Number of iDISK concepts mapped to >1 UMLS concept: {num_more}\n")  # noqa
+    plt.figure(figsize=(8, 4))
+    _, _, patches = plt.hist(num_cuis, rwidth=0.8, log=True,
+                             bins=np.arange(1, max(num_cuis))-0.5,
+                             color="#3d91c2")
+    xticks = np.arange(0, max(num_cuis), 5)
+    xticks[0] = 1
+    plt.xticks(xticks, fontsize=12)
+    plt.xlim(0.3, 40)
+    plt.yticks(fontsize=12)
+    plt.xlabel("Number of matched UMLS concepts", fontsize=14)
+    plt.ylabel("Number of iDISK concepts\n(log scale)", fontsize=14)
     plt.tight_layout()
     plt.savefig(outfile)
 
 
-def plot_match_stats(matches, outdir):
+def plot_proportion_atoms_matched(matches, outfile):
     matched_proportions = {}
-    num_atoms_per_concept = {}
-    num_cuis_per_concept = {}
     for cui in matches.keys():
-        atoms = list(matches[cui].values())
+        atoms = matches[cui].values()
         num_matched = len([m for m in atoms if len(m["umls_cuis"]) > 0])
         matched_proportions[cui] = (num_matched / len(atoms))
-        uniq_concepts = {cui for m in atoms for cui in m["umls_cuis"]}
-        num_atoms_per_concept[cui] = len(atoms)
-        num_cuis_per_concept[cui] = len(uniq_concepts)
 
-    bins = [f"{start:.2f}-{start+0.09:.2f}"
+    bins = [f"{int(start*100)}-{int(start*100)+9}"
             for start in np.linspace(0.0, 1.0, num=11)]
-    bins[-1] = "1.00"
-    bins[0] = "0.01-0.09"
-    bins.insert(0, "0.00")
+    bins[-1] = "100"
+    bins[0] = "1-9"
+    bins.insert(0, "0")
     proportion_bins = {binn: 0 for binn in bins}
-    num_atoms_bins = {binn: [] for binn in bins}
-    num_cuis_bins = {binn: [] for binn in bins}
     for (cui, proportion) in matched_proportions.items():
         if proportion == 0.0:
             binn_idx = 0
@@ -136,46 +129,29 @@ def plot_match_stats(matches, outdir):
             binn_idx = int((proportion * 10) // 1) + 1
         binn = bins[binn_idx]
         proportion_bins[binn] += 1
-        num_atoms_bins[binn].append(num_atoms_per_concept[cui])
-        num_cuis_bins[binn].append(num_cuis_per_concept[cui])
 
+    logfile = outfile.strip() + ".log"
+    with open(logfile, 'w') as outF:
+        outF.write("Proportions\n")
+        outF.write(str(proportion_bins) + '\n\n')
+        outF.write("Num concepts with <100% of atoms matched\n")
+        outF.write(str(sum([proportion_bins[k] for k in proportion_bins
+                            if k != "100"])) + '\n\n')
+        outF.write("Concepts with no atoms matched\n")
+        outF.write(str([cui for cui in matched_proportions
+                        if matched_proportions[cui] == 0]))
+
+    labels = bins
     x_positions = range(len(bins))
-    labels = bins[::-1]
-    prop_heights = sorted(proportion_bins.values(), reverse=True)
-    plt.figure()
-    plt.bar(x_positions, prop_heights)
-    plt.xticks(x_positions, labels, rotation=45)
-    plt.title("Number of concepts by proportion of atoms matched")
-    plt.xlabel("Proportion of atoms matched")
-    plt.ylabel("Number of concepts")
-    plt.tight_layout()
-    outfile = os.path.join(outdir, "matches_per_concept.png")
-    plt.savefig(outfile)
+    heights = [proportion_bins[binn] for binn in labels]
 
-    sorted_num_atoms_bins = [(binn, num_atoms_bins[binn]) for binn in labels]
-    mean_num_atoms_heights = [np.mean(vals) for (binn, vals)
-                              in sorted_num_atoms_bins]
-    plt.figure()
-    plt.bar(x_positions, mean_num_atoms_heights)
-    plt.xticks(x_positions, labels, rotation=45)
-    plt.title("Mean number of atoms per concept by\nproportion of atoms matched")  # noqa
-    plt.xlabel("Proportion of atoms matched")
-    plt.ylabel("Mean number of atoms")
+    plt.figure(figsize=(8, 4))
+    plt.bar(x_positions, heights, color="#3d91c2")
+    plt.xticks(x_positions, labels, rotation=45, fontsize=12)
+    plt.yticks(fontsize=12)
+    plt.xlabel("Percentage of atoms matched to the UMLS", fontsize=14)
+    plt.ylabel("Number of iDISK concepts", fontsize=14)
     plt.tight_layout()
-    outfile = os.path.join(outdir, "mean_atoms_per_match_proportion.png")
-    plt.savefig(outfile)
-
-    sorted_num_cuis_bins = [(binn, num_cuis_bins[binn]) for binn in labels]
-    mean_num_cuis_heights = [np.mean(vals) for (binn, vals)
-                             in sorted_num_cuis_bins]
-    plt.figure()
-    plt.bar(x_positions, mean_num_cuis_heights)
-    plt.xticks(x_positions, labels, rotation=45)
-    plt.title("Mean number of unique CUIs per concept by\nproportion of atoms matched")  # noqa
-    plt.xlabel("Proportion of atoms matched")
-    plt.ylabel("Mean number of unique CUIs")
-    plt.tight_layout()
-    outfile = os.path.join(outdir, "mean_cuis_per_match_proportion.png")
     plt.savefig(outfile)
 
 

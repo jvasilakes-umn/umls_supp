@@ -170,19 +170,24 @@ def plot_eval_stats(stats, color="skyblue", save_to=None):
     """
     Plots the distribution of metrics across documents.
     """
-    fig, axs = plt.subplots(3, 1, figsize=(10, 15))
+    fig, axs = plt.subplots(1, 3, figsize=(6.5, 1.5))
 
     axs[0].hist(stats["precision"], color=color)
-    axs[0].axvline(np.mean(stats["precision"]), linewidth=3, color="dimgray")
     axs[0].set_title("Precision")
+    axs[0].set_xticks([0.0, 0.5, 1.0])
+    axs[0].tick_params(axis='y', which='both', left=False, right=False, labelleft=False)
 
     axs[1].hist(stats["recall"], color=color)
-    axs[1].axvline(np.mean(stats["recall"]), linewidth=3, color="dimgray")
     axs[1].set_title("Recall")
+    axs[1].set_xticks([0.0, 0.5, 1.0])
+    axs[1].tick_params(axis='y', which='both', left=False, right=False, labelleft=False)
 
     axs[2].hist(stats["f1"], color=color)
-    axs[2].axvline(np.mean(stats["f1"]), linewidth=3, color="dimgray")
     axs[2].set_title("F1")
+    axs[2].set_xticks([0.0, 0.5, 1.0])
+    axs[2].tick_params(axis='y', which='both', left=False, right=False, labelleft=False)
+
+    plt.tight_layout()
 
     if save_to is None:
         plt.show()

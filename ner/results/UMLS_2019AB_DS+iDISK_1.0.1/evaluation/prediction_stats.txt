@@ -1,0 +1,5 @@
+Predictions
+-----------
+           TP         FP         FN         Total     
+Strict     2324       9088       1386       11412     
+Lenient    3364       8048       416        11412     

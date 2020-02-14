@@ -52,6 +52,9 @@ def main(anndirs, outdir):
             abstract_sents = sent_tokenize(abstract)
             anns = [BratANN.from_string(line.strip())
                     for line in open(ann_path)]
+            # Skip abstracts with no annotations
+            if len(anns) == 0:
+                continue
 
             json_abs = {f"{abstract_id}": abstract}
             json_anns = convert_brat_to_json(abstract_id, anns)

@@ -4,3 +4,5 @@ ls -1 abstracts | head -n 20 | xargs -I % sh -c 'cp abstracts/% annotator1/%; cp
 # The above leaves 378 remaining abstracts.
 ls -1 abstracts | tail -n +21 | head -n 189 | xargs -I % sh -c 'cp abstracts/% annotator1/%'  # Annotator 1 gets the first 189 after the 20 overlapping
 ls -1 abstracts | tail -n +21 | tail -n 189 | xargs -I % sh -c 'cp abstracts/% annotator2/%'  # Annotator 2 gets the remaining 189. 
+
+47 of these 398 contain no mentions of dietary supplements. 

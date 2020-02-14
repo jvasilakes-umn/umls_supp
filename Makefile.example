@@ -9,70 +9,54 @@ BASEDIR = $(shell pwd)
 
 METATHESAURUS_VERSION = 2019AB
 METATHESAURUS_DIR = /path/to/Metathesaurus/2019AB/META/
+SEMANTIC_GROUPS_FILE = /Users/vasil024/tools/seminfo/data/SemGroups_2018.txt
 
 IDISK_VERSION = 1.0.1
 IDISK_VERSION_DIR = /path/to/iDISK_release/1.0.1
 
 LUINORM_BINARY = /path/to/lvg2018lite/bin/luiNorm
 
+## Specify an existing QuickUMLS installation of the full Metathesaurus here.
+## If not specified, it will be installed under the ner/lib/quickumls_installs/ directory.
+QUICKUMLS_INSTALL_DIR = /Users/vasil024/tools/QuickUMLS/2019AB_BasicInstall
+
 
 #################################################################################
 # PROJECT RULES                                                                 #
 #################################################################################
 
+## Installed all required software for the experiments
 requirements:
 	pip install -U pip setuptools wheel
 	pip install -r $(BASEDIR)/requirements.txt
 	python -m spacy download en
-	## git clone https://github.com/zhang-informatics/iDISK
 	git clone https://github.com/zhang-informatics/iDISK
-	cd $(BASEDIR)/iDISK/lib/idlib; pip install -r requirements.txt; \
-		python setup.py develop
+	cd $(BASEDIR)/iDISK/lib/idlib; pip install -r requirements.txt; python setup.py develop
 
 
+## Check that the required files exist.
 check_files:
-ifeq (,$(wildcard $(METATHESAURUS_DIR)))
-	@echo "*** $(METATHESAURUS_DIR) does not exist! ***"
-endif
-ifeq (,$(wildcard $(IDISK_VERSION_DIR)))
-	@echo "*** $(IDISK_VERSION_DIR) does not exist! ***"
-endif
-ifeq (,$(wildcard $(LUINORM_BINARY)))
-	@echo "*** $(LUINORM_BINARY) does not exist! ***"
-endif
+	@if [ ! -d $(METATHESAURUS_DIR) ]; then \
+		echo "*** $(METATHESAURUS_DIR) does not exist! ***"; \
+	fi; \
+	if [ ! -d $(IDISK_VERSION_DIR) ]; then \
+		echo "*** $(IDISK_VERSION_DIR) does not exist! ***"; \
+	fi; \
+	if [ ! -f $(LUINORM_BINARY) ]; then \
+		echo "*** $(LUINORM_BINARY) does not exist! ***"; \
+	fi; \
+	if [ ! -z $(QUICKUMLS_INSTALL_DIR) ]; then \
+		if [ ! -d $(QUICKUMLS_INSTALL_DIR) ]; then \
+			echo "*** $(QUICKUMLS_INSTALL_DIR) does not exist! ***"; \
+		fi; \
+	fi;
 
 
-clean_all: coverage_clean ner_clean
+## Clean up the NER and coverage experiments.
+clean_all: ner_clean coverage_clean
 
-experiments: coverage_run_all ner_prepare_all ner_run_all
-
-
-#################################################################################
-# COVERAGE EXPERIMENTS
-#################################################################################
-
-COVERAGE_DIR = $(BASEDIR)/coverage
-
-coverage_run_all: coverage_match coverage_summary
-
-coverage_clean:
-	rm -r $(COVERAGE_DIR)/results/iDISK-$(IDISK_VERSION)_UMLS-$(METATHESAURUS_VERSION)/
-
-coverage_match:
-	mkdir -p $(COVERAGE_DIR)/results/iDISK-$(IDISK_VERSION)_UMLS-$(METATHESAURUS_VERSION)/
-	$(PYTHON_INTERPRETER) $(COVERAGE_DIR)/src/match_idisk_to_umls.py \
-		--umls_mrconso $(METATHESAURUS_DIR)/MRCONSO.RRF \
-		--umls_mrsty $(METATHESAURUS_DIR)/MRSTY.RRF \
-		--idisk_version_dir $(IDISK_VERSION_DIR) \
-		--luinorm_bin $(LUINORM_BINARY) \
-		--outfile $(COVERAGE_DIR)/results/iDISK-$(IDISK_VERSION)_UMLS-$(METATHESAURUS_VERSION)/matches.json
-
-
-coverage_summary:
-	$(PYTHON_INTERPRETER) $(COVERAGE_DIR)/src/coverage_summary.py \
-		--infile $(COVERAGE_DIR)/results/iDISK-$(IDISK_VERSION)_UMLS-$(METATHESAURUS_VERSION)/matches.json \
-		--outdir $(COVERAGE_DIR)/results/iDISK-$(IDISK_VERSION)_UMLS-$(METATHESAURUS_VERSION)/
-	@echo "Summary saved to $(COVERAGE_DIR)/results/iDISK-$(IDISK_VERSION)_UMLS-$(METATHESAURUS_VERSION)/"
+## Run the NER and coverage experiments to reproduce the results from the paper.
+experiments: ner_prepare_all ner_run_all coverage_run_all
 
 
 #################################################################################
@@ -87,37 +71,53 @@ DS_PUBMED_DIRS = $(NER_DIR)/data/raw/annotator1 \
 ## C0042890: Vitamins
 SUPPLEMENT_CUIS = C0242295,C0042890
 
-ner_prepare_all: ner_prepare_gold_standard ner_prepare_term_lists ner_prepare_models 
-
+## Run the NER pipeline.
 ner_run_all: ner_prepare_all ner_run ner_evaluate
 
+## Prepare the files required for NER.
+ner_prepare_all: ner_prepare_gold_standard ner_prepare_term_lists ner_prepare_models 
+
+## Clean up the NER experiments.
 ner_clean:
-	rm -r $(NER_DIR)/data/processed/
-	rm -r $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)/
-	rm -r $(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION)/
-	rm -r $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)
-	rm -r $(NER_DIR)/lib/quickumls_installs/*
+	@echo "###################################################################################"
+	@echo "#  Cleaning up NER files."
+	@echo "#  Note that this recipe DOES NOT remove any files from lib/rrf_files or"
+	@echo "#    lib/quickumls_installs as they can take a long time to regenerate."
+	@echo "#  You can manually remove them with"
+	@echo "#    rm -r ner/lib/rrf_files/* ner/lib/quickumls_installs/*"
+	@echo "###################################################################################"
+	rm $(NER_DIR)/data/external/*.pickle
+	rm -r $(NER_DIR)/data/processed/*
 	rm -r $(NER_DIR)/results/*
 
 
+## Convert the gold standard brat annotations into a common JSON format.
 ner_prepare_gold_standard:
+	@echo "###################################################################################"
+	@echo "#  Preparing Gold Standard NER Annotations"
+	@echo "###################################################################################"
 	mkdir -p $(NER_DIR)/data/processed/
 	$(PYTHON_INTERPRETER) $(NER_DIR)/src/convert_brat_to_json.py \
 		--anndirs $(DS_PUBMED_DIRS) \
 		--outdir $(NER_DIR)/data/processed/
 
 
+## Build the term lists that will be later used to run NER.
 ner_prepare_term_lists:
-	# UMLS_DS
-	mkdir -p $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)/
+	@echo "###################################################################################"
+	@echo "#  Preparing UMLS_DS term list"
+	@echo "###################################################################################"
+	mkdir -p $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)_DS/
 	$(PYTHON_INTERPRETER) $(NER_DIR)/src/get_related_umls_concepts.py \
 		--cuis $(SUPPLEMENT_CUIS) \
 		--mrconso $(METATHESAURUS_DIR)/MRCONSO.RRF \
 		--mrsty $(METATHESAURUS_DIR)/MRSTY.RRF \
 		--mrrel $(METATHESAURUS_DIR)/MRREL.RRF \
 		--stopwords $(NER_DIR)/data/external/stopwords.txt \
-		--outdir $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)/
-	# iDISK
+		--outdir $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)_DS/
+	@echo "###################################################################################"
+	@echo "#  Preparing iDISK term list"
+	@echo "###################################################################################"
 	mkdir -p $(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION)/
 	$(PYTHON_INTERPRETER) $(NER_DIR)/src/idisk2rrf.py \
 		--idisk_version_dir $(IDISK_VERSION_DIR) \
@@ -125,44 +125,88 @@ ner_prepare_term_lists:
 		--umls_semantic_types $(NER_DIR)/data/external/SemanticTypes_2018AB.txt \
 		--stopwords $(NER_DIR)/data/external/stopwords.txt \
 		--outdir $(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION)/
-	# Combined
-	mkdir -p $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/
-	cat $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)/MRCONSO.RRF \
+	@echo "###################################################################################"
+	@echo "#  Preparing Combined term list"
+	@echo "###################################################################################"
+	mkdir -p $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/
+	cat $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)_DS/MRCONSO.RRF \
 	    $(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION)/MRCONSO.RRF \
-	    > $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/MRCONSO.RRF
-	cat $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)/MRSTY.RRF \
+	    > $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/MRCONSO.RRF
+	cat $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)_DS/MRSTY.RRF \
 	    $(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION)/MRSTY.RRF \
-	    > $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/MRSTY.RRF
+	    > $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/MRSTY.RRF
 
 
-ner_prepare_models:
-	# UMLS_DS
-	mkdir -p $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)/
+## Check for a QuickUMLS installation of the full Metathesaurus. If not found, install it.
+ner_install_quickumls:
+	@echo "###################################################################################"
+	@echo "#  Checking for an existing QuickUMLS installation"
+	@echo "###################################################################################"
+	@if [ -d $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)_ALL/ ]; then \
+		echo " *** QuickUMLS found @ $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)_ALL/ ***"; \
+	elif [ -d $(QUICKUMLS_INSTALL_DIR)/umls-simstring.db ]; then \
+		echo " *** QuickUMLS found @ $(QUICKUMLS_INSTALL_DIR) ***"; \
+		ln -s $(QUICKUMLS_INSTALL_DIR) $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)_ALL; \
+	else \
+		$(eval QUICKUMLS_INSTALL_DIR=$(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)_ALL/) \
+		echo " *** QuickUMLS not found. Installing to $(QUICKUMLS_INSTALL_DIR) ***"; \
+		echo " *** THIS WILL TAKE A WHILE! ***"; \
+		$(PYTHON_INTERPRETER) -m quickumls.install --lowercase \
+			$(METATHESAURUS_DIR) \
+			$(QUICKUMLS_INSTALL_DIR); \
+	fi;
+
+
+## Install the term lists into QuickUMLS
+ner_prepare_models: ner_install_quickumls
+	@echo "###################################################################################"
+	@echo "#  Installing UMLS_DS term list into QuickUMLS"
+	@echo "###################################################################################"
+	mkdir -p $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)_DS/
 	$(PYTHON_INTERPRETER) -m quickumls.install --lowercase \
-		$(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)/ \
-		$(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)/
-	# iDISK
-	mkdir -p $(NER_DIR)/lib/quickumls_installs/iDISK_$(IDISK_VERSION)
+		$(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)_DS/ \
+		$(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)_DS/
+	@echo "###################################################################################"
+	@echo "#  Installing iDISK term list into QuickUMLS"
+	@echo "###################################################################################"
+	mkdir -p $(NER_DIR)/lib/quickumls_installs/iDISK_$(IDISK_VERSION)/
 	$(PYTHON_INTERPRETER) -m quickumls.install --lowercase \
-		$(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION) \
-		$(NER_DIR)/lib/quickumls_installs/iDISK_$(IDISK_VERSION)
-	# Combined
-	mkdir -p $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)
+		$(NER_DIR)/lib/rrf_files/iDISK_$(IDISK_VERSION)/ \
+		$(NER_DIR)/lib/quickumls_installs/iDISK_$(IDISK_VERSION)/
+	@echo "###################################################################################"
+	@echo "#  Installing Combined term list into QuickUMLS"
+	@echo "###################################################################################"
+	mkdir -p $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)
 	$(PYTHON_INTERPRETER) -m quickumls.install --lowercase \
-		$(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/ \
-		$(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/
+		$(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/ \
+		$(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/
 
 
-ner_run:
-	@echo "UMLS_DS"
-	mkdir -p $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)/
+## Run NER using the various term lists on the abstracts.
+ner_run: ner_install_quickumls
+	@echo "###################################################################################"
+	@echo "#  Running NER UMLS_ALL"
+	@echo "###################################################################################"
+	mkdir -p $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_ALL
 	$(PYTHON_INTERPRETER) $(NER_DIR)/src/run_quickumls.py \
-		--quickumls_install_dir $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)/ \
+		--quickumls_install_dir $(QUICKUMLS_INSTALL_DIR) \
 		--documents $(NER_DIR)/data/processed/abstracts.json \
 		--quickumls_conf $(NER_DIR)/conf/quickumls.json \
-		--outfile $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)/predictions.json \
-		> $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)/predictions.json.log
-	@echo "iDISK"
+		--outfile $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_ALL/predictions.json \
+		> $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_ALL/predictions.json.log
+	@echo "###################################################################################"
+	@echo "#  Running NER UMLS_DS"
+	@echo "###################################################################################"
+	mkdir -p $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS/
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/run_quickumls.py \
+		--quickumls_install_dir $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)_DS/ \
+		--documents $(NER_DIR)/data/processed/abstracts.json \
+		--quickumls_conf $(NER_DIR)/conf/quickumls.json \
+		--outfile $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS/predictions.json \
+		> $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS/predictions.json.log
+	@echo "###################################################################################"
+	@echo "#  Running NER iDISK"
+	@echo "###################################################################################"
 	mkdir -p $(NER_DIR)/results/iDISK_$(IDISK_VERSION)/
 	$(PYTHON_INTERPRETER) $(NER_DIR)/src/run_quickumls.py \
 		--quickumls_install_dir $(NER_DIR)/lib/quickumls_installs/iDISK_$(IDISK_VERSION) \
@@ -170,32 +214,131 @@ ner_run:
 		--quickumls_conf $(NER_DIR)/conf/quickumls.json \
 		--outfile $(NER_DIR)/results/iDISK_$(IDISK_VERSION)/predictions.json \
 		> $(NER_DIR)/results/iDISK_$(IDISK_VERSION)/predictions.json.log
-	@echo "Combined"
-	mkdir -p $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)
+	@echo "###################################################################################"
+	@echo "#  Running NER Combined"
+	@echo "###################################################################################"
+	mkdir -p $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)
 	$(PYTHON_INTERPRETER) $(NER_DIR)/src/run_quickumls.py \
-		--quickumls_install_dir $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION) \
+		--quickumls_install_dir $(NER_DIR)/lib/quickumls_installs/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION) \
 		--documents $(NER_DIR)/data/processed/abstracts.json \
 		--quickumls_conf $(NER_DIR)/conf/quickumls.json \
-		--outfile $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/predictions.json \
-		> $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/predictions.json.log
+		--outfile $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/predictions.json \
+		> $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/predictions.json.log
+	@echo "###################################################################################"
+	@echo "#  Getting Union of predictions from NER systems UMLS_DS and iDISK"
+	@echo "###################################################################################"
+	mkdir -p $(NER_DIR)/results/UNION-UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/union_predictions.py \
+		--predictions1 $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS/predictions.json \
+		--predictions2 $(NER_DIR)/results/iDISK_$(IDISK_VERSION)/predictions.json \
+		--outfile $(NER_DIR)/results/UNION-UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/predictions.json \
+		> $(NER_DIR)/results/UNION-UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/predictions.json.log
 
 
+## Evaluate the predictions from each NER system.
 ner_evaluate:
-	@echo "UMLS_DS"
+	@echo "###################################################################################"
+	@echo "#  Evaluating NER systems"
+	@echo "###################################################################################"
+	@echo " *** UMLS_ALL ***"
+	mkdir -p $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_ALL/evaluation/
 	$(PYTHON_INTERPRETER) $(NER_DIR)/src/evaluate.py \
-		--predictions $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)/predictions.json \
+		--predictions $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_ALL/predictions.json \
 		--gold_standard $(NER_DIR)/data/processed/gold_standard.json \
-		--outdir $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)/
-	@echo "iDISK"
+		--outdir $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_ALL/evaluation/
+	@echo " *** UMLS_DS ***"
+	mkdir -p $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS/evaluation/
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/evaluate.py \
+		--predictions $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS/predictions.json \
+		--gold_standard $(NER_DIR)/data/processed/gold_standard.json \
+		--outdir $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS/evaluation/
+	@echo " *** iDISK ***"
+	mkdir -p $(NER_DIR)/results/iDISK_$(IDISK_VERSION)/evaluation/
 	$(PYTHON_INTERPRETER) $(NER_DIR)/src/evaluate.py \
 		--predictions $(NER_DIR)/results/iDISK_$(IDISK_VERSION)/predictions.json \
 		--gold_standard $(NER_DIR)/data/processed/gold_standard.json \
-		--outdir $(NER_DIR)/results/iDISK_$(IDISK_VERSION)
-	@echo "UMLS_DS+iDISK"
+		--outdir $(NER_DIR)/results/iDISK_$(IDISK_VERSION)/evaluation/
+	@echo " *** Combined ***"
+	mkdir -p $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/evaluation/
 	$(PYTHON_INTERPRETER) $(NER_DIR)/src/evaluate.py \
-		--predictions $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)/predictions.json \
+		--predictions $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/predictions.json \
 		--gold_standard $(NER_DIR)/data/processed/gold_standard.json \
-		--outdir $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)+iDISK_$(IDISK_VERSION)
+		--outdir $(NER_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/evaluation/
+	@echo " *** Union of UMLS_DS and iDISK ***"
+	mkdir -p $(NER_DIR)/results/UNION-UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/evaluation/
+	$(PYTHON_INTERPRETER) $(NER_DIR)/src/evaluate.py \
+		--predictions $(NER_DIR)/results/UNION-UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/predictions.json \
+		--gold_standard $(NER_DIR)/data/processed/gold_standard.json \
+		--outdir $(NER_DIR)/results/UNION-UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/evaluation/
+
+
+#################################################################################
+# COVERAGE EXPERIMENTS
+#################################################################################
+
+COVERAGE_DIR = $(BASEDIR)/coverage
+
+## Run the coverage experiments pipeline.
+coverage_run_all: coverage_match coverage_summary coverage_analysis
+
+## Clean up the coverage experiments.
+coverage_clean:
+	rm -r $(COVERAGE_DIR)/results/*
+	rm $(COVERAGE_DIR)/qualitative_analysis_annotations/annotation_summary.txt
+
+## Match the iDISK ingredient terminology to the full UMLS (UMLS_ALL) and the dietary supplement subset of the UMLS (UMLS_DS)
+coverage_match:
+	@echo "###################################################################################"
+	@echo "#  Matching iDISK to UMLS_ALL"
+	@echo "###################################################################################"
+	mkdir -p $(COVERAGE_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_ALL+iDISK_$(IDISK_VERSION)/
+	$(PYTHON_INTERPRETER) $(COVERAGE_DIR)/src/match_idisk_to_umls.py \
+		--umls_mrconso $(METATHESAURUS_DIR)/MRCONSO.RRF \
+		--umls_mrsty $(METATHESAURUS_DIR)/MRSTY.RRF \
+		--idisk_version_dir $(IDISK_VERSION_DIR) \
+		--luinorm_bin $(LUINORM_BINARY) \
+		--outfile $(COVERAGE_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_ALL+iDISK_$(IDISK_VERSION)/matches.json
+	@echo "###################################################################################"
+	@echo "#  Matching iDISK to UMLS_DS"
+	@echo "###################################################################################"
+	mkdir -p $(COVERAGE_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/
+	$(PYTHON_INTERPRETER) $(COVERAGE_DIR)/src/match_idisk_to_umls.py \
+		--umls_mrconso $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)_DS/MRCONSO.RRF \
+		--umls_mrsty $(NER_DIR)/lib/rrf_files/UMLS_$(METATHESAURUS_VERSION)_DS/MRSTY.RRF \
+		--idisk_version_dir $(IDISK_VERSION_DIR) \
+		--luinorm_bin $(LUINORM_BINARY) \
+		--outfile $(COVERAGE_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/matches.json
+
+
+## Summarize the result of the matching.
+coverage_summary:
+	@echo "###################################################################################"
+	@echo "#  Generating summaries of the matches."
+	@echo "###################################################################################"
+	mkdir -p $(COVERAGE_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_ALL+iDISK_$(IDISK_VERSION)/analysis
+	$(PYTHON_INTERPRETER) $(COVERAGE_DIR)/src/coverage_summary.py \
+		--infile $(COVERAGE_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_ALL+iDISK_$(IDISK_VERSION)/matches.json \
+		--outdir $(COVERAGE_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_ALL+iDISK_$(IDISK_VERSION)/analysis/
+	@echo "Summary saved to $(COVERAGE_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_ALL+iDISK_$(IDISK_VERSION)/analysis/"
+	mkdir -p $(COVERAGE_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/analysis
+	$(PYTHON_INTERPRETER) $(COVERAGE_DIR)/src/coverage_summary.py \
+		--infile $(COVERAGE_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/matches.json \
+		--outdir $(COVERAGE_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/analysis/
+	@echo "Summary saved to $(COVERAGE_DIR)/results/UMLS_$(METATHESAURUS_VERSION)_DS+iDISK_$(IDISK_VERSION)/analysis/"
+
+
+## Run an analysis of the coverage.
+coverage_analysis:
+	@echo "###################################################################################"
+	@echo "#  Generating summary of qualitative analysis annotations."
+	@echo "###################################################################################"
+	$(PYTHON_INTERPRETER) $(COVERAGE_DIR)/src/summarize_annotations.py \
+		--annotations_file $(COVERAGE_DIR)/qualitative_analysis_annotations/annotations1000.csv \
+		--mrsty_file $(METATHESAURUS_DIR)/MRSTY.RRF \
+		--semgroups_file $(SEMANTIC_GROUPS_FILE) \
+		--outfile $(COVERAGE_DIR)/qualitative_analysis_annotations/annotation_summary.txt
+
+
 
 #################################################################################
 # Self Documenting Commands                                                     #

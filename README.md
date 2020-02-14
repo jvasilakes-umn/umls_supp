@@ -15,15 +15,16 @@ as `conda` or `virtualenv`. You'll also need the following tools:
 
  * [LVG](https://lsg3.nlm.nih.gov/LexSysGroup/Projects/lvg/current/web/download.html): The "lite" version is fine, as these experiments just use the `luiNorm` binary.
  * [UMLS Metathesaurus data files](https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html): You do not need the full release, as these experiments only use `MRCONSO.RRF`, `MRSTY.RRF`, and `MRREL.RRF`.
+ * [UMLS Semantic Groups file](https://metamap.nlm.nih.gov/Docs/SemGroups_2018.txt)
  * [iDISK 1.0.1](https://github.com/jvasilakes/idisk/releases/tag/v1.0.1): You don't need the source code, just the release `.zip` file. Unzip this somewhere to obtain the required iDISK data files.
 
-Once you've downloaded these, edit the `PROJECT CONFIGURATION` section of `Makefile.example` to point to their respective locations. Check that these file paths are correct to avoid wasting time later:
+Once you've downloaded these, edit the relevant variables in the `PROJECT CONFIGURATION` section of `Makefile.example` to point to their respective locations. Check that these file paths are correct to avoid wasting time later:
 
 ```
 make check_files
 ```
 
-If this outputs `make: Nothing to be done for 'check_files'.`, then all is well and you can install all the dependencies with
+If doesn't output anything, then all is well and you can install all the dependencies with
 
 ```
 make requirements
@@ -76,7 +77,7 @@ NER systems built using one of three term lists:
 
  3. Combined: The union of the above two term lists.
 
-Performance was measured on 398 PubMed abstracts annotated for mentions of dietary supplement ingredients.
+The NER predictions were evaluated on 398 PubMed abstracts annotated for mentions of dietary supplement ingredients.
 We report precision, recall, and F1 score. These metrics can be found in the `ner/results/` directory.
 
 ```
@@ -111,13 +112,14 @@ Food|food|T168|Objects|OBJC
 The exact versions of the software and data files used are listed below:
 
 ```
-python=3.7.6
-umls_metathesaurus=2019AB
-idisk=1.0.1
-idlib=0.0.1
+python==3.7.6
+umls_metathesaurus==2019AB
+idisk==1.0.1
+idlib==0.0.1
 matplotlib==3.1.2
 numpy==1.18.1
 quickumls==1.3.0.post4
 quickumls-simstring==1.1.5.post1
 spacy==2.2.3
+editdistance==0.5.3
 ```

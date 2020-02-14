@@ -2,7 +2,6 @@ import os
 import argparse
 import json
 import subprocess
-import math
 import pandas as pd
 from tqdm import tqdm
 from collections import defaultdict
@@ -131,10 +130,14 @@ if __name__ == "__main__":
     out_matches = defaultdict(dict)
     for cui in exact_matches.keys():
         for aui in exact_matches[cui].keys():
+            data = exact_matches[cui][aui]
+            data["normed_term"] = norm_matches[cui][aui]["term"]
             if len(exact_matches[cui][aui]["umls_cuis"]) > 0:
-                out_matches[cui][aui] = exact_matches[cui][aui]
+                data["normed"] = False
             else:
-                out_matches[cui][aui] = norm_matches[cui][aui]
+                data["umls_cuis"] = norm_matches[cui][aui]["umls_cuis"]
+                data["normed"] = True
+            out_matches[cui][aui] = data
     print("DONE")
 
     print(f"SAVING TO {args.outfile}")

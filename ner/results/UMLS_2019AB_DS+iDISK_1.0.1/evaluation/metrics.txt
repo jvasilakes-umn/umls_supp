@@ -1,0 +1,5 @@
+Global Results
+--------------
+           Precision  Recall     F1        
+Strict     0.20       0.63       0.31      
+Lenient    0.29       0.89       0.44      
