@@ -121,5 +121,4 @@ numpy==1.18.1
 quickumls==1.3.0.post4
 quickumls-simstring==1.1.5.post1
 spacy==2.2.3
-editdistance==0.5.3
 ```
